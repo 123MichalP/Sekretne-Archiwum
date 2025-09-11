@@ -7,36 +7,41 @@
   font-family: 'Segoe UI', sans-serif;
 }
 
+body {
+  margin: 0;
+  background-color: #1c1c1c;
+}
+
 .header {
-  padding: 2rem;
+  left: 0;
+  top: 0;
+  padding: 1rem;
+  padding-left: 3rem;
   background-color: #172030;
   border-bottom: 1px solid #333;
+  position: fixed;
+  height: 8rem;
+  width: 100%;
 }
 
 .header > h1{
   color: #FDC700;
 }
 
-.main {
-  padding: 2rem;
+.header > p{
+  color: #D1D5DC;
 }
 
-.room {
-  margin-top: 2rem;
-  padding: 1rem;
-  border: 1px dashed #555;
-  background-color: #1c1c1c;
+.main {
+  padding: 2rem;
+  height: 440rem;
 }
 
 footer{
-  padding: 2rem;
+  height: 6rem;
+  color: #D1D5DC;
+  text-align: center;
+  padding: 1.5rem;
   background-color: #172030;
   border-top: 1px solid #333;
-}
-
-main{
-  height: 40rem;
-}
-div{
-  width: 100%;
 }

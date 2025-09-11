@@ -13,7 +13,8 @@
 
 ## Technologie
 
-Projekt realizowany w technologii **Vite + React** na **Typescrpt**, z wykorzystaniem:
+Projekt realizowany w technologii **Vite + React** na **Typescript**, z wykorzystaniem:
+
 - Hooków do zarządzania stanem gry
 - Responsywnego designu
 - Modularnej struktury komponentów (łatwa rozbudowa o nowe poziomy, licznik czasu, system zapisu)
@@ -23,6 +24,5 @@ Projekt realizowany w technologii **Vite + React** na **Typescrpt**, z wykorzyst
 Stworzenie angażującej gry logicznej z elementami fabularnymi, która łączy atmosferę tajemnicy z interaktywną rozgrywką.
 
 ---
-
 
 Projekt w fazie rozwoju.
