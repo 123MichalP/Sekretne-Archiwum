@@ -4,12 +4,12 @@
   background-color: #1C2736;
   color: #f0f0f0;
   min-height: 100vh;
-  font-family: 'Segoe UI', sans-serif;
 }
 
 body {
   margin: 0;
   background-color: #1c1c1c;
+  font-family: Arial, sans-serif;
 }
 
 .header {
@@ -19,7 +19,6 @@ body {
   padding-left: 3rem;
   background-color: #172030;
   border-bottom: 1px solid #333;
-  position: fixed;
   height: 8rem;
   width: 100%;
 }
@@ -34,7 +33,7 @@ body {
 
 .main {
   padding: 2rem;
-  height: 440rem;
+  height: 47rem;
 }
 
 footer{
@@ -44,4 +43,60 @@ footer{
   padding: 1.5rem;
   background-color: #172030;
   border-top: 1px solid #333;
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  text-align: center;
+}
+
+.card {
+  min-height: 13rem;
+  background: #f6f7fb;
+  color: #000;
+  border-radius: 8px;
+  padding: 20px;
+}
+
+.card h3, .card h4 {
+  margin-top: 1rem;
+}
+
+.wrap {
+  max-width: 1100px;
+  margin: 2rem auto;
+}
+
+.spanStatus{
+  display: inline-block;
+  margin-top: 10px;
+  padding: 4px 8px;
+  border-radius: 4px;
+  background: #eee;
+  font-size: 13px;
+}
+
+.notViewed{
+  background-color: #666362;
+  color: white;
+}
+
+.locked{
+  background-color: #D7263D;
+  color: white;
+}
+
+.cardIcon{
+  width: 64px;
+  height: 64px;
+  opacity: 65%;
+}
+
+
+@media (max-width: 768px) {
+  .cards {
+    grid-template-columns: 1fr;
+  }
 }
