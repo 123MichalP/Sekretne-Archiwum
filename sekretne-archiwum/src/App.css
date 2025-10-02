@@ -60,6 +60,11 @@ footer{
   padding: 20px;
 }
 
+.card:hover{
+  cursor: pointer;
+  border-width: 5px;
+}
+
 .card h3, .card h4 {
   margin-top: 1rem;
 }
@@ -99,4 +104,50 @@ footer{
   .cards {
     grid-template-columns: 1fr;
   }
+}
+
+.popup {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.7);
+  transition: opacity 500ms;
+  visibility: hidden;
+  opacity: 0;
+  z-index: 1000;
+}
+
+.popup.active {
+  visibility: visible;
+  opacity: 1;
+}
+
+.innerPopup {
+  margin: 70px auto;
+  padding: 20px;
+  background: #fff;
+  border-radius: 5px;
+  width: 30%;
+  position: relative;
+  transition: all 0.3s ease-in-out;
+}
+
+ul  li{
+  text-align: left;
+  margin-bottom: 2%;
+  background-color: #f6f7fb !important;
+}
+
+ul > .notViewed{
+  color: orange;
+}
+
+ul > .locked{
+  color:#887474;
+}
+
+ul > .viewed{
+  color: green;
 }
