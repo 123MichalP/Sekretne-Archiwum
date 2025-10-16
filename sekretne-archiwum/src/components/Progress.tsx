@@ -6,7 +6,7 @@ interface Props {
 }
 function Progress({ cards }: Props) {
   return (
-    <div className="card">
+    <div className="card" id="progress">
       <h3>Postępy</h3>
       <ul>
         <li className={cards[0].status}>{cards[0].heading}</li>

@@ -16,19 +16,37 @@ body {
   left: 0;
   top: 0;
   padding: 1rem;
-  padding-left: 3rem;
+  padding-left: 7rem;
   background-color: #172030;
   border-bottom: 1px solid #333;
   height: 8rem;
-  width: 100%;
+  text-align: center;
+}
+.header > *{
+  float: left;
 }
 
-.header > h1{
+.header h1{
   color: #FDC700;
 }
 
-.header > p{
+.header p{
   color: #D1D5DC;
+}
+
+#EqBox{
+
+  float: right;
+  margin: 3rem 5rem;
+}
+
+#EqBox span{
+  color: gray;
+}
+
+#EqBox >*{
+  margin-left: 0.8rem;
+  font-size: 1rem;
 }
 
 .main {
@@ -53,6 +71,7 @@ footer{
 }
 
 .card {
+  position: relative;
   min-height: 13rem;
   background: #f6f7fb;
   color: #000;
@@ -175,4 +194,32 @@ ul > .viewed{
   border-radius: 8%;
   width: 75%;
   height: 3vh;
+}
+
+#progress{
+  cursor: default;
+}
+
+#hintsButton{
+  border: 1px solid yellow;
+  background: none;
+  color: yellow;
+  padding: 0.4rem 0.6rem 0.4rem 0.4rem;
+  border-radius: 15%;
+  font-size: 1.2rem;
+}
+
+#hintsButton .icon {
+  vertical-align: middle;
+  margin-right: 6px;
+}
+
+button{
+  cursor: pointer;
+}
+
+.iconBox{
+  position: absolute;
+  right: 0;
+  top: 0;
 }
