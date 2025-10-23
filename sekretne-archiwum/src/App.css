@@ -30,7 +30,7 @@ body {
   color: #FDC700;
 }
 
-.header p{
+.subHeading{
   color: #D1D5DC;
 }
 
@@ -222,4 +222,12 @@ button{
   position: absolute;
   right: 0;
   top: 0;
+}
+
+ol li {
+  margin-top: 0.4rem;
+}
+
+#EqBox .popup{
+  color: black 
 }

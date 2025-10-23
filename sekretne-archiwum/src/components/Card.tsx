@@ -14,6 +14,9 @@ interface Props {
   password: string | number | null;
   onUnlockNext?: () => void;
   victoryText: string | null;
+  hints: string[];
+  usedHints: { card: string; hint: string }[];
+  onUseHint: (hint: string) => void;
 }
 
 function Card({
@@ -27,6 +30,9 @@ function Card({
   password,
   victoryText,
   onUnlockNext,
+  hints,
+  usedHints,
+  onUseHint,
 }: Props) {
   const [buttonPopup, setButtonPopup] = useState(false);
   const [hintPopup, setHintPopup] = useState(false);
@@ -50,10 +56,37 @@ function Card({
     victoryText = "";
   }
 
-  const handleHintClick = () =>{
-    console.log("klik")
+  const [hintIndex, setHintIndex] = useState(0);
+
+  const handleHintClick = () => {
+    if (hintIndex < hints.length) {
+      setHintPopup(true);
+      const firstHint = hints[hintIndex];
+      const alreadyUsed = usedHints.some(
+        (h) => h.card === heading && h.hint === firstHint
+      );
+  
+      if (!alreadyUsed) {
+        onUseHint(firstHint);
+      }
+    } else {
+      alert("To już wszystkie podpowiedzi!");
+    }
+    setHintIndex(0);
     setHintPopup(true);
-  }
+  };
+    
+  useEffect(() => {
+    if (hintPopup && hints.length > 0) {
+      const currentHint = hints[hintIndex];
+      const alreadyUsed = usedHints.some(
+        (h) => h.card === heading && h.hint === currentHint
+      );
+      if (!alreadyUsed) {
+        onUseHint(currentHint);
+      }
+    }
+  }, [hintPopup, hintIndex]);
 
   const handleConfirm = () => {
     const normalizedInput = inputValue.toLowerCase();
@@ -117,7 +150,31 @@ function Card({
         </Popup>
       )}
     <Popup trigger={hintPopup} setTrigger={setHintPopup}>
-        <h1>SZYFR CEZARA</h1>
+      <p>{hints[hintIndex]}</p>
+      <p className="hintCounter">{hintIndex + 1} / {hints.length}</p>
+      <button
+        onClick={() => {
+          setHintIndex((prev) => {
+            const next = prev + 1;
+            if (next < hints.length) {
+              const nextHint = hints[next];
+              const alreadyUsed = usedHints.some(
+                (h) => h.card === heading && h.hint === nextHint
+              );
+
+              if (!alreadyUsed) {
+                onUseHint(nextHint);
+              }
+              return next;
+            } else {
+              alert("To już wszystkie podpowiedzi!");
+              return prev;
+            }
+          });
+        }}
+      >
+        Następna podpowiedź
+      </button>
     </Popup>
     </>
   );

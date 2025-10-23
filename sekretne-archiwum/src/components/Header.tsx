@@ -1,13 +1,13 @@
 import Equipment from "./Equipment";
-function Header({ itemStatus }: { itemStatus: boolean[] }) {
+function Header({ itemStatus, usedHints }: { itemStatus: boolean[],  usedHints: { card: string; hint: string }[];  }){
   return (
     <>
       <header className="header">
         <div>
         <h1>Sekretne Archiwum</h1>
-        <p>Rozwiąż zagadki i ucieknij z archiwum!</p>
+        <p className="subHeading">Rozwiąż zagadki i ucieknij z archiwum!</p>
         </div>
-        <Equipment itemStatus={itemStatus}></Equipment>
+        <Equipment itemStatus={itemStatus} usedHints={usedHints} />
       </header>
     </>
   );

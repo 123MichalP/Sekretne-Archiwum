@@ -15,7 +15,6 @@ const Popup: React.FC<PopupProps> = ({ trigger, children, setTrigger }) => {
     >
       <div className="innerPopup" onClick={(e) => e.stopPropagation()}>
         {children}
-        {/* <button onClick={() => setTrigger(false)}>Zamknij</button> */}
       </div>
     </article>
   );
