@@ -2,8 +2,10 @@ import "../App.css";
 import { useState, useEffect} from "react";
 import Popup from "./Popup";
 import ReactMarkdown from "react-markdown";
+import { Link } from "react-router-dom";
 
 interface Props {
+  image?: string | undefined;
   heading: string;
   description: string;
   icon: string;
@@ -11,15 +13,17 @@ interface Props {
   popupContent: string;
   hasPopupInput: boolean;
   onStatusChange?: (newStatus: string) => void;
-  password: string | number | null;
+  password: string | number | undefined;
   onUnlockNext?: () => void;
-  victoryText: string | null;
+  victoryText: string | undefined;
   hints: string[];
   usedHints: { card: string; hint: string }[];
+  isFinalCard?: boolean;
   onUseHint: (hint: string) => void;
 }
 
 function Card({
+  image,
   heading,
   description,
   icon,
@@ -29,6 +33,7 @@ function Card({
   hasPopupInput,
   password,
   victoryText,
+  isFinalCard,
   onUnlockNext,
   hints,
   usedHints,
@@ -52,7 +57,7 @@ function Card({
     }
   };
 
-  if (victoryText ==null){
+  if (typeof victoryText == 'undefined'){
     victoryText = "";
   }
 
@@ -90,8 +95,7 @@ function Card({
 
   const handleConfirm = () => {
     const normalizedInput = inputValue.toLowerCase();
-    console.log(password)
-    console.log(normalizedInput)
+    
 
     if(normalizedInput == password){
       setReactionText(victoryText)
@@ -127,26 +131,50 @@ function Card({
         <Popup trigger={buttonPopup} setTrigger={setButtonPopup}>
           <h2>{heading}</h2>
           <article className="popupContent">
+          {typeof image !== 'undefined' ?           <img className="popupImage"
+              src={image}
+              alt={heading}
+          /> : null}
             <ReactMarkdown>{popupContent}</ReactMarkdown>
           </article>
-          {hasPopupInput && (
-            <>
-              <input
-                className="popupInput"
-                value={inputValue}
-                onChange={(e) => setInputValue(e.target.value)}
-                placeholder="Wpisz hasło"
-              />
-              <button
-                type="button"
-                className="popupButton"
-                onClick={handleConfirm}
-              >
-                Zatwierdź
-              </button>
+          {hasPopupInput ? (
+          <>
+            <input
+              className="popupInput"
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              placeholder="Wpisz hasło"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  handleConfirm();
+                }
+              }}
+            />
+            <button
+              type="button"
+              className="popupButton"
+              onClick={handleConfirm}
+            >
+              Zatwierdź
+            </button>
+            {reactionText && (
+            <p className="victoryText">
               <ReactMarkdown>{reactionText}</ReactMarkdown>
-            </>
+            </p>
           )}
+        </>
+      ) : isFinalCard ? (
+          <Link to="/end"
+            type="button"
+            className="popupButton"
+            onClick={() => {
+              setReactionText("Gratulacje! Udało Ci się opuścić pokój!");
+              onUnlockNext?.();
+            }}
+          >
+            Opuść pokój
+          </Link>
+        ) : null}
         </Popup>
       )}
     <Popup trigger={hintPopup} setTrigger={setHintPopup}>

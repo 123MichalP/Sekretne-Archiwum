@@ -1,9 +1,13 @@
+#root{
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
 .App {
-  width: 100%;
-  text-align: center;
   background-color: #1C2736;
   color: #f0f0f0;
-  min-height: 100vh;
+  width: 100%;
+  text-align: center;
 }
 
 body {
@@ -50,11 +54,12 @@ body {
 }
 
 .main {
+  height: 100%;
+  flex-grow: 1 !important; 
   padding: 2rem;
-  height: 47rem;
 }
 
-footer{
+footer {
   height: 6rem;
   color: #D1D5DC;
   text-align: center;
@@ -188,12 +193,17 @@ ul > .viewed{
 }
 
 .popupButton{
+  display: flex; 
+  align-items: center; 
+  justify-content: center; 
   margin-top: 1vh;
   background-color: black;
   color: white;
   border-radius: 8%;
   width: 75%;
   height: 3vh;
+  text-decoration: none;
+  margin: 1vh auto;
 }
 
 #progress{
@@ -230,4 +240,10 @@ ol li {
 
 #EqBox .popup{
   color: black 
+}
+
+.popupImage{
+  max-width: 100%;
+  height: auto;
+  margin-top: 1rem;
 }
