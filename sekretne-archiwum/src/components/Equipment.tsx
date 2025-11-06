@@ -8,7 +8,7 @@ function Equipment({ itemStatus, usedHints }: { itemStatus: boolean[], usedHints
   const pendriveText = `
   Na pendrive znajdujesz parę różnych plików. Niestety pliki są uszkodzone i nie możesz ich otworzyć.  
   
-  Word1.docx  
+  *Word1.docx  
   Inwestycje.xslx  
   Notatki_dodatkowe.txt  
   Dłużnicy.docx  
@@ -16,7 +16,7 @@ function Equipment({ itemStatus, usedHints }: { itemStatus: boolean[], usedHints
   Word2.docx  
   Straty.xslx  
   XXXXX_nie_otwierać.zip  
-  Pracownicy_i_wspólnicy.zip
+  Pracownicy_i_wspólnicy.zip*
   `
   return (
     <div id="EqBox">

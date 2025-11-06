@@ -9,7 +9,10 @@ import End from "./pages/End";
 import Register from "./pages/Register";     
 
 function App() {
-  const [itemStatus, setItemStatus] = useState([false, false, false]);
+  const [itemStatus, setItemStatus] = useState<boolean[]>(() => {
+    const saved = localStorage.getItem("itemStatus");
+    return saved ? JSON.parse(saved) : [false, false, false];
+  });  
   const [usedHints, setUsedHints] = useState<{ card: string; hint: string }[]>([]);
 
   return (

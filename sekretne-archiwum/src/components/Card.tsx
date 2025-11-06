@@ -195,7 +195,6 @@ function Card({
               }
               return next;
             } else {
-              alert("To już wszystkie podpowiedzi!");
               return prev;
             }
           });

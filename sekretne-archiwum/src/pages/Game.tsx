@@ -1,7 +1,7 @@
 import "../App.css";
 import Progress from "../components/Progress";
 import Card from "../components/Card";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function Game({
     itemStatus,
@@ -35,7 +35,7 @@ function Game({
       description: "Stara szafka z zamkiem. Może uda się ją otworzyć?",
       icon: '<svg class="cardIcon" viewBox="0 0 64 64" xmlns="http://www.w3.org/2000/svg" stroke-width="3" stroke="#000000" fill="none"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"><rect x="14.5" y="7.45" width="34.52" height="46.03" rx="3.01"></rect><line x1="31.76" y1="52.24" x2="31.76" y2="7.45"></line><line x1="18.23" y1="58.24" x2="18.23" y2="52.62"></line><line x1="45.18" y1="58.24" x2="45.18" y2="52.15"></line><line x1="37.49" y1="33.25" x2="37.49" y2="28.13" stroke-linecap="round"></line></g></svg>',
       initialCardStatus: "notViewed",
-      popupContent: `Zablokowana szafka. Wymaga kodu (6 cyfr).  
+      popupContent: `Zablokowana szafka. Wymaga kodu (6 liter).  
       `,
       hasPopupInput:true,
       password:"sekret",
@@ -50,7 +50,7 @@ function Game({
       popupContent: "Stary komputer, wygląda dość charakterystycznie...może nawet znajomo?",
       hasPopupInput:true,
       password:"windowsxp",
-      victoryText: `Komputer ładuje się... bardzo wolno \n
+      victoryText: `Komputer ładuje się... bardzo wolno. Dosłownie 5 min. \n
       Otrzymano dostęp do komputera`,
     },
     {
@@ -60,7 +60,7 @@ function Game({
       initialCardStatus: "locked",
       popupContent: "Zamek kombinacyjny wymaga podania kodu (cyfry).",
       hasPopupInput:true,
-      password:12345,
+      password:365,
       victoryText:`Sejf otwiera się z cichym kliknięciem... \n
       Otrzymano: Karta magnetyczna`
     },
@@ -81,19 +81,71 @@ function Game({
       "Hasło to 'Sekret'."
     ],
     "Szafka z zamkiem": [
-      "Wygląda na to, że otworzy się po wpisaniu hasła.",
       "Hasło może być czymś, co znalazłeś wcześniej.",
-      "Spróbuj użyć słowa z obrazu!"
+      "Spróbuj użyć słowa z szyfru (obraz)!"
     ],
     "Stary komputer": [
-      "Komputer nie działa bez pendrive’a?",
-      "Może trzeba coś włożyć do portu USB.",
-      "Spróbuj przedmiot, który znalazłeś w szafce."
-    ]
+      "Może coś ciekawego znajduje się na PenDrive?",
+      "Pliki na pendrive...zaczynają się na dość ciekawe litery....",
+      "Hasło to 'windowsxp'."
+    ],
+    "Sejf biurowy": [
+      "Ahh liczby, tak łatwo je przeoczyć",
+      "W tym archiwum można po kolei znaleźć kilka charakterystycznych liczb",
+      "hasło to '365' ",
+    ],
+    "Drzwi wyjściowe": [
+      "No bez przesady, z tym sobie poradzisz"
+    ],
   }; 
-  const [cardsStatus, setCardsStatus] = useState(
-    cardsData.map((card) => card.initialCardStatus)
-  );
+
+  const [timeElapsed, setTimeElapsed] = useState<number>(() => {
+    const savedStart = localStorage.getItem("gameStartTime");
+    return savedStart ? Math.floor((Date.now() - Number(savedStart)) / 1000) : 0;
+  });
+  useEffect(() => {
+    if (!localStorage.getItem("gameStartTime")) {
+      localStorage.setItem("gameStartTime", Date.now().toString());
+    }
+
+    const interval = setInterval(() => {
+      const start = Number(localStorage.getItem("gameStartTime"));
+      setTimeElapsed(Math.floor((Date.now() - start) / 1000));
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+  const [cardsStatus, setCardsStatus] = useState<string[]>(() => {
+    const saved = localStorage.getItem("cardsStatus");
+    return saved ? JSON.parse(saved) : cardsData.map(c => c.initialCardStatus);
+  });
+
+  useEffect(() => {
+    const savedHints = localStorage.getItem("usedHints");
+    if (savedHints) {
+      setUsedHints(JSON.parse(savedHints));
+    }
+  }, [setUsedHints]);
+
+  useEffect(() => {
+    localStorage.setItem("cardsStatus", JSON.stringify(cardsStatus));
+  }, [cardsStatus]);
+
+  useEffect(() => {
+    localStorage.setItem("usedHints", JSON.stringify(usedHints));
+  }, [usedHints]);
+
+  useEffect(() => {
+    const savedItems = localStorage.getItem("itemStatus");
+    if (savedItems) {
+      setItemStatus(JSON.parse(savedItems));
+    }
+  }, []);
+
+  useEffect(() => {
+    localStorage.setItem("itemStatus", JSON.stringify(itemStatus));
+  }, [itemStatus]);
 
 
   const handleStatusChange = (index: number, newStatus: string) => {
@@ -102,25 +154,25 @@ function Game({
     setCardsStatus(updatedStatus);
   };
 
+  const handleUnlockNext = (index: number) => {
+    const updatedStatus = [...cardsStatus];
+    if ((index + 1) < updatedStatus.length) {
+      updatedStatus[index + 1] = "notViewed";
+      setCardsStatus(updatedStatus);
+      setItemStatus([true, false, false]);
+    }
+  };
+
   const progressData = cardsData.map((card, index) => ({
     heading: card.heading,
     status: cardsStatus[index],
   }));
 
-  const handleUnlockNext = (index: number) =>{
-    const updatedStatus = [...cardsStatus];
-    if ((index + 1) < updatedStatus.length){
-      console.log(updatedStatus)
-      updatedStatus[index + 1] = "notViewed";
-      console.log(updatedStatus)
-      setCardsStatus(updatedStatus)
-      setItemStatus([true, false, false])
-      console.log(index+1)
-    }
-  }
-
   return (
     <div>
+      <div className="timer">
+        ⏱️ Czas gry: {Math.floor(timeElapsed / 60)} min {timeElapsed % 60} sek
+      </div>
       <section className="cards wrap">
         {cardsData.map((card, index) => (
           <Card
@@ -132,14 +184,17 @@ function Game({
             initialCardStatus={cardsStatus[index]}
             popupContent={card.popupContent}
             hasPopupInput={card.hasPopupInput}
-            password = {card.password}
-            victoryText = {card.victoryText}
+            password={card.password}
+            victoryText={card.victoryText}
             hints={hintsData[card.heading] || []}
             usedHints={usedHints}
             isFinalCard={card.isFinalCard}
             onUseHint={(hint) => {
-              setUsedHints((prev) => [...prev, { card: card.heading, hint }]);
-              console.log(usedHints)
+              setUsedHints((prev) => {
+                const newHints = [...prev, { card: card.heading, hint }];
+                localStorage.setItem("usedHints", JSON.stringify(newHints));
+                return newHints;
+              });
             }}
             onStatusChange={(newStatus: string) =>
               handleStatusChange(index, newStatus)
