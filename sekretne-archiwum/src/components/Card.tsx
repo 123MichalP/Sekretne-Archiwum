@@ -1,5 +1,5 @@
 import "../App.css";
-import { useState, useEffect} from "react";
+import { useState, useEffect } from "react";
 import Popup from "./Popup";
 import ReactMarkdown from "react-markdown";
 import { Link } from "react-router-dom";
@@ -57,7 +57,7 @@ function Card({
     }
   };
 
-  if (typeof victoryText == 'undefined'){
+  if (typeof victoryText == "undefined") {
     victoryText = "";
   }
 
@@ -70,7 +70,7 @@ function Card({
       const alreadyUsed = usedHints.some(
         (h) => h.card === heading && h.hint === firstHint
       );
-  
+
       if (!alreadyUsed) {
         onUseHint(firstHint);
       }
@@ -80,7 +80,7 @@ function Card({
     setHintIndex(0);
     setHintPopup(true);
   };
-    
+
   useEffect(() => {
     if (hintPopup && hints.length > 0) {
       const currentHint = hints[hintIndex];
@@ -94,115 +94,155 @@ function Card({
   }, [hintPopup, hintIndex]);
 
   const handleConfirm = () => {
-    const normalizedInput = inputValue.toLowerCase();
-    
+    const normalizedInput = inputValue.toLowerCase().replace(/\s+/g, "");
+    const normalizedPassword =
+      password !== undefined
+        ? String(password).toLowerCase().replace(/\s+/g, "")
+        : "";
 
-    if(normalizedInput == password){
-      setReactionText(victoryText)
+    if (normalizedInput == normalizedPassword) {
+      setReactionText(victoryText);
       onUnlockNext?.();
-    }
-    else if(normalizedInput=="qazwsx"){
-      setReactionText("Nie ma szans, że brat to napisał 💀")
+    } else if (normalizedInput == "qazwsx") {
+      setReactionText("Nie ma szans, że brat to napisał 💀");
       // Odblokowanie sekretnego osiągnięcia ["komputer szkolny"] ?????
+    } else {
+      setReactionText("Źle! Nie zadziałało :(");
     }
-    else{
-      setReactionText("Źle! Nie zadziałało :(")
-    }
-  }
+  };
 
   return (
     <>
-    <div className="card" onClick={handleClick}>
-      <div dangerouslySetInnerHTML={{ __html: icon }} />
-      <div className="iconBox">
-      <svg onClick={(e) => { e.stopPropagation(); handleHintClick() }} width="32px" height="32px" viewBox="0 0 1024.00 1024.00" className="icon" version="1.1" xmlns="http://www.w3.org/2000/svg" fill="#cbd44e" stroke="#cbd44e" stroke-width="4.096"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round" stroke="#CCCCCC" stroke-width="40.96"></g><g id="SVGRepo_iconCarrier"><path d="M389.12 675.84h235.52v40.96H389.12z" fill="#90f425"></path><path d="M403.968 634.88h216.576l23.552-62.976 4.608-2.56c76.8-43.52 123.904-120.832 123.904-205.312 0-133.12-116.736-241.152-261.12-241.152S250.88 230.912 250.88 364.032c0 84.48 47.616 161.792 124.416 205.312l4.608 2.56 24.064 62.976zM235.52 364.032C235.52 222.208 359.424 107.52 512 107.52s276.48 114.688 276.48 256.512c0 92.672-52.736 173.568-132.096 218.624l-25.088 67.584H393.728l-26.112-67.584C288.256 537.6 235.52 456.704 235.52 364.032zM619.52 762.88H404.48v112.64c0 5.632 4.608 10.24 10.24 10.24h194.56c5.632 0 10.24-4.608 10.24-10.24v-112.64z m15.36-15.36v128c0 14.336-11.264 25.6-25.6 25.6H414.72c-14.336 0-25.6-11.264-25.6-25.6v-128h245.76zM401.92 714.24h220.16v-25.6h-220.16v25.6z m235.52-40.96v56.32h-250.88v-56.32h250.88z" fill=""></path><path d="M557.568 318.464c-14.848-2.56-29.184 0-41.984 5.632-11.776-5.632-26.112-7.68-41.472-5.632-36.864 5.632-56.832 33.792-59.392 78.848V634.88h30.72V398.848c2.048-31.744 12.8-47.104 33.792-50.176 2.048-0.512 4.096-0.512 6.656-0.512-9.728 13.312-15.36 30.208-15.872 49.664-1.024 46.592 19.456 77.312 47.104 77.312 25.6 0 44.032-37.888 43.008-77.312-0.512-18.432-6.144-35.84-15.872-49.664 3.072 0 5.632 0 8.704 0.512 22.016 3.584 32.768 17.92 32.768 49.664V634.88h30.72V398.336c0-45.568-19.968-73.728-58.88-79.872z m-28.16 80.384c0.512 13.824-2.048 26.624-7.168 36.352-2.048 4.096-4.096 7.168-5.632 8.704l-0.512 0.512c-2.048-0.512-4.608-2.56-7.168-6.656-5.12-8.192-8.704-20.992-8.192-39.424 0.512-15.872 5.632-28.672 14.336-37.376 8.704 9.216 13.824 22.528 14.336 37.888z" fill="#90f425"></path></g></svg>
+      <div className="card" onClick={handleClick}>
+        <div dangerouslySetInnerHTML={{ __html: icon }} />
+        <div className="iconBox">
+          <svg
+            onClick={(e) => {
+              e.stopPropagation();
+              handleHintClick();
+            }}
+            width="32px"
+            height="32px"
+            viewBox="0 0 1024.00 1024.00"
+            className="icon"
+            version="1.1"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="#cbd44e"
+            stroke="#cbd44e"
+            stroke-width="4.096"
+          >
+            <g id="SVGRepo_bgCarrier" stroke-width="0"></g>
+            <g
+              id="SVGRepo_tracerCarrier"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke="#CCCCCC"
+              stroke-width="40.96"
+            ></g>
+            <g id="SVGRepo_iconCarrier">
+              <path
+                d="M389.12 675.84h235.52v40.96H389.12z"
+                fill="#90f425"
+              ></path>
+              <path
+                d="M403.968 634.88h216.576l23.552-62.976 4.608-2.56c76.8-43.52 123.904-120.832 123.904-205.312 0-133.12-116.736-241.152-261.12-241.152S250.88 230.912 250.88 364.032c0 84.48 47.616 161.792 124.416 205.312l4.608 2.56 24.064 62.976zM235.52 364.032C235.52 222.208 359.424 107.52 512 107.52s276.48 114.688 276.48 256.512c0 92.672-52.736 173.568-132.096 218.624l-25.088 67.584H393.728l-26.112-67.584C288.256 537.6 235.52 456.704 235.52 364.032zM619.52 762.88H404.48v112.64c0 5.632 4.608 10.24 10.24 10.24h194.56c5.632 0 10.24-4.608 10.24-10.24v-112.64z m15.36-15.36v128c0 14.336-11.264 25.6-25.6 25.6H414.72c-14.336 0-25.6-11.264-25.6-25.6v-128h245.76zM401.92 714.24h220.16v-25.6h-220.16v25.6z m235.52-40.96v56.32h-250.88v-56.32h250.88z"
+                fill=""
+              ></path>
+              <path
+                d="M557.568 318.464c-14.848-2.56-29.184 0-41.984 5.632-11.776-5.632-26.112-7.68-41.472-5.632-36.864 5.632-56.832 33.792-59.392 78.848V634.88h30.72V398.848c2.048-31.744 12.8-47.104 33.792-50.176 2.048-0.512 4.096-0.512 6.656-0.512-9.728 13.312-15.36 30.208-15.872 49.664-1.024 46.592 19.456 77.312 47.104 77.312 25.6 0 44.032-37.888 43.008-77.312-0.512-18.432-6.144-35.84-15.872-49.664 3.072 0 5.632 0 8.704 0.512 22.016 3.584 32.768 17.92 32.768 49.664V634.88h30.72V398.336c0-45.568-19.968-73.728-58.88-79.872z m-28.16 80.384c0.512 13.824-2.048 26.624-7.168 36.352-2.048 4.096-4.096 7.168-5.632 8.704l-0.512 0.512c-2.048-0.512-4.608-2.56-7.168-6.656-5.12-8.192-8.704-20.992-8.192-39.424 0.512-15.872 5.632-28.672 14.336-37.376 8.704 9.216 13.824 22.528 14.336 37.888z"
+                fill="#90f425"
+              ></path>
+            </g>
+          </svg>
+        </div>
+        <h4>{heading}</h4>
+        <p>{description}</p>
+        <span className={`spanStatus ${cardStatus}`}>
+          {cardStatus === "viewed"
+            ? "Zobaczono"
+            : cardStatus === "notViewed"
+            ? "Nie zobaczono"
+            : "Zablokowane"}
+        </span>
       </div>
-      <h4>{heading}</h4>
-      <p>{description}</p>
-      <span className={`spanStatus ${cardStatus}`}>
-        {cardStatus === "viewed"
-          ? "Zobaczono"
-          : cardStatus === "notViewed"
-          ? "Nie zobaczono"
-          : "Zablokowane"}
-      </span>
-    </div>
-    {cardStatus !== "locked" && (
+      {cardStatus !== "locked" && (
         <Popup trigger={buttonPopup} setTrigger={setButtonPopup}>
           <h2>{heading}</h2>
           <article className="popupContent">
-          {typeof image !== 'undefined' ?           <img className="popupImage"
-              src={image}
-              alt={heading}
-          /> : null}
+            {typeof image !== "undefined" ? (
+              <img className="popupImage" src={image} alt={heading} />
+            ) : null}
             <ReactMarkdown>{popupContent}</ReactMarkdown>
           </article>
           {hasPopupInput ? (
-          <>
-            <input
-              className="popupInput"
-              value={inputValue}
-              onChange={(e) => setInputValue(e.target.value)}
-              placeholder="Wpisz hasło"
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  handleConfirm();
-                }
-              }}
-            />
-            <button
+            <>
+              <input
+                className="popupInput"
+                value={inputValue}
+                onChange={(e) => setInputValue(e.target.value)}
+                placeholder="Wpisz hasło"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    handleConfirm();
+                  }
+                }}
+              />
+              <button
+                type="button"
+                className="popupButton"
+                onClick={handleConfirm}
+              >
+                Zatwierdź
+              </button>
+              {reactionText && (
+                <p className="victoryText">
+                  <ReactMarkdown>{reactionText}</ReactMarkdown>
+                </p>
+              )}
+            </>
+          ) : isFinalCard ? (
+            <Link
+              to="/end"
               type="button"
               className="popupButton"
-              onClick={handleConfirm}
+              onClick={() => {
+                setReactionText("Gratulacje! Udało Ci się opuścić pokój!");
+                onUnlockNext?.();
+              }}
             >
-              Zatwierdź
-            </button>
-            {reactionText && (
-            <p className="victoryText">
-              <ReactMarkdown>{reactionText}</ReactMarkdown>
-            </p>
-          )}
-        </>
-      ) : isFinalCard ? (
-          <Link to="/end"
-            type="button"
-            className="popupButton"
-            onClick={() => {
-              setReactionText("Gratulacje! Udało Ci się opuścić pokój!");
-              onUnlockNext?.();
-            }}
-          >
-            Opuść pokój
-          </Link>
-        ) : null}
+              Opuść pokój
+            </Link>
+          ) : null}
         </Popup>
       )}
-    <Popup trigger={hintPopup} setTrigger={setHintPopup}>
-      <p>{hints[hintIndex]}</p>
-      <p className="hintCounter">{hintIndex + 1} / {hints.length}</p>
-      <button
-        onClick={() => {
-          setHintIndex((prev) => {
-            const next = prev + 1;
-            if (next < hints.length) {
-              const nextHint = hints[next];
-              const alreadyUsed = usedHints.some(
-                (h) => h.card === heading && h.hint === nextHint
-              );
+      <Popup trigger={hintPopup} setTrigger={setHintPopup}>
+        <p>{hints[hintIndex]}</p>
+        <p className="hintCounter">
+          {hintIndex + 1} / {hints.length}
+        </p>
+        <button
+          onClick={() => {
+            setHintIndex((prev) => {
+              const next = prev + 1;
+              if (next < hints.length) {
+                const nextHint = hints[next];
+                const alreadyUsed = usedHints.some(
+                  (h) => h.card === heading && h.hint === nextHint
+                );
 
-              if (!alreadyUsed) {
-                onUseHint(nextHint);
+                if (!alreadyUsed) {
+                  onUseHint(nextHint);
+                }
+                return next;
+              } else {
+                return prev;
               }
-              return next;
-            } else {
-              return prev;
-            }
-          });
-        }}
-      >
-        Następna podpowiedź
-      </button>
-    </Popup>
+            });
+          }}
+        >
+          Następna podpowiedź
+        </button>
+      </Popup>
     </>
   );
 }
