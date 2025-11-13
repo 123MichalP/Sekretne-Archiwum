@@ -18,6 +18,26 @@ function End() {
     localStorage.removeItem("cardsStatus");
     localStorage.removeItem("usedHints");
     localStorage.removeItem("itemStatus");
+
+    const token = localStorage.getItem("token");
+    if (token) {
+      fetch("http://localhost:5000/api/game/state", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          gameState: {
+            itemStatus: [],
+            usedHints: [],
+            cardsStatus: ["viewed", "notViewed", "locked", "locked", "locked"],
+            timeElapsed: 0,
+          },
+        }),
+      }).catch((error) => console.error("Error resetting backend game state:", error));
+    }
+
     navigate("/game");
   };
 

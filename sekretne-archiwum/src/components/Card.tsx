@@ -195,9 +195,9 @@ function Card({
                 Zatwierdź
               </button>
               {reactionText && (
-                <p className="victoryText">
+                <div className="victoryText">
                   <ReactMarkdown>{reactionText}</ReactMarkdown>
-                </p>
+                </div>
               )}
             </>
           ) : isFinalCard ? (

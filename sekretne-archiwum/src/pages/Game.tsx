@@ -127,6 +127,17 @@ function Game({
   });
 
   useEffect(() => {
+    loadGame();
+  }, []);
+
+  useEffect(() => {
+    if (token) {
+      saveGame();
+    }
+  }, [itemStatus, usedHints, cardsStatus, timeElapsed]);
+
+  
+  useEffect(() => {
     const savedHints = localStorage.getItem("usedHints");
     if (savedHints) {
       setUsedHints(JSON.parse(savedHints));
@@ -171,6 +182,86 @@ function Game({
     heading: card.heading,
     status: cardsStatus[index],
   }));
+
+  const token = localStorage.getItem("token");
+
+  async function saveGame() {
+    if (!token) return; // Skip backend save for local play
+
+    console.log("Saving game state:", { itemStatus, usedHints, cardsStatus, timeElapsed });
+
+    try {
+      const response = await fetch("http://localhost:5000/api/game/state", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify({
+          gameState: {
+            itemStatus,
+            usedHints,
+            cardsStatus,
+            timeElapsed,
+          },
+        }),
+      });
+
+      if (response.ok) {
+        console.log("Game saved successfully!");
+      } else {
+        console.error("Failed to save game:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error while saving game:", error);
+    }
+  }
+
+  async function loadGame() {
+    if (!token) return; 
+
+    try {
+      const response = await fetch("http://localhost:5000/api/game/state", {
+        headers: { "Authorization": `Bearer ${token}` },
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Loaded game data:", data);
+        if (data && data.timeElapsed > 0) {
+          // Use backend data if it has progress
+          setItemStatus(data.itemStatus || []);
+          setUsedHints(data.usedHints || []);
+          setCardsStatus(data.cardsStatus || []);
+          setTimeElapsed(data.timeElapsed || 0);
+          console.log("Game loaded successfully from backend!");
+        } else {
+          // Backend has no progress, use localStorage
+          const savedCards = localStorage.getItem("cardsStatus");
+          if (savedCards) {
+            setCardsStatus(JSON.parse(savedCards));
+          }
+          const savedItems = localStorage.getItem("itemStatus");
+          if (savedItems) {
+            setItemStatus(JSON.parse(savedItems));
+          }
+          const savedHints = localStorage.getItem("usedHints");
+          if (savedHints) {
+            setUsedHints(JSON.parse(savedHints));
+          }
+          const savedTime = localStorage.getItem("gameStartTime");
+          if (savedTime) {
+            setTimeElapsed(Math.floor((Date.now() - Number(savedTime)) / 1000));
+          }
+          console.log("No progress in backend, loaded from localStorage!");
+        }
+      } else {
+        console.error("Failed to load game:", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error while loading game:", error);
+    }
+  }
 
   return (
     <div>
