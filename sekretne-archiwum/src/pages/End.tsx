@@ -21,11 +21,11 @@ function End() {
 
     const token = localStorage.getItem("token");
     if (token) {
-      fetch("http://localhost:5000/api/game/state", {
+      fetch("http://localhost:5002/api/game/state", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "Authorization": `Bearer ${token}`,
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify({
           gameState: {
@@ -35,7 +35,9 @@ function End() {
             timeElapsed: 0,
           },
         }),
-      }).catch((error) => console.error("Error resetting backend game state:", error));
+      }).catch((error) =>
+        console.error("Error resetting backend game state:", error)
+      );
     }
 
     navigate("/game");

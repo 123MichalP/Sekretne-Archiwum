@@ -12,5 +12,5 @@ const sequelize = new Sequelize(
     logging: false,
   }
 );
-
+await sequelize.sync({ alter: true })
 export default sequelize;

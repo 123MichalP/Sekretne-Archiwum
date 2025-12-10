@@ -19,6 +19,11 @@ const User = sequelize.define("User", {
     type: DataTypes.DATE,
     defaultValue: DataTypes.NOW,
   },
+  bestTime: {
+    type: DataTypes.INTEGER,
+    defaultValue: null,
+  },
+
 });
 
 export default User;

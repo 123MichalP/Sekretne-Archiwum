@@ -9,28 +9,26 @@ function Login() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     const requestBody = { username, password };
     console.log("Request body:", requestBody);
-    
+
     try {
-      const response = await fetch("http://localhost:5000/api/auth/login", {
+      const response = await fetch("http://localhost:5002/api/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify(requestBody),
-
       });
 
       if (response.ok) {
         const data = await response.json();
         localStorage.setItem("token", data.token);
-        window.location.href = "/lore"; 
-      }
-      else {
+        window.location.href = "/lore";
+      } else {
         console.error("Login failed:", response.statusText);
-              }
+      }
     } catch (error) {
       console.error("Error during login:", error);
     }
@@ -77,10 +75,14 @@ function Login() {
           <label>
             <input type="checkbox" /> Zapamiętaj mnie
           </label>
-          <Link to="#" className="forgot">Zapomniałeś hasła?</Link>
+          <Link to="#" className="forgot">
+            Zapomniałeś hasła?
+          </Link>
         </div>
 
-        <button type="submit" className="loginButton">Zaloguj się</button>
+        <button type="submit" className="loginButton">
+          Zaloguj się
+        </button>
         <Link to="/lore" className="secondaryBtn">
           Przejdź do archiwum (bez logowania)
         </Link>
@@ -94,4 +96,3 @@ function Login() {
 }
 
 export default Login;
-
