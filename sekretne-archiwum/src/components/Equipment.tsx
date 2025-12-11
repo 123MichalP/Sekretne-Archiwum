@@ -46,7 +46,9 @@ function Equipment({ itemStatus, usedHints }: { itemStatus: boolean[], usedHints
       <span>Ekwipunek: </span>
       {itemStatus[0] && <button onClick={() => setSpanPopup(true)} className="EqItem">Pendrive</button>}
       <Popup trigger={spanPopup} setTrigger={setSpanPopup}>
-            <ReactMarkdown>{pendriveText}</ReactMarkdown>
+        <div className="computerPopup">
+          <ReactMarkdown>{pendriveText}</ReactMarkdown>
+        </div>
       </Popup>
       {itemStatus[1] && <button className="EqItem">Nerki</button>}
       {itemStatus[2] && <button className="EqItem">Pan Tadeusz</button>}

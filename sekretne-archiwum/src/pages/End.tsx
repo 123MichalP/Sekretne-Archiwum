@@ -1,50 +1,79 @@
 import { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
-function End() {
+interface Props {
+  onAppReset: () => void;
+}
+
+function End({ onAppReset }: Props) {
   const [finalTime, setFinalTime] = useState<number | null>(null);
+  const [bestTime, setBestTime] = useState<number | null>(null);
   const navigate = useNavigate();
+  const location = useLocation()
 
   useEffect(() => {
-    const start = localStorage.getItem("gameStartTime");
-    if (start) {
-      const totalSeconds = Math.floor((Date.now() - Number(start)) / 1000);
-      setFinalTime(totalSeconds);
-    }
-  }, []);
+      const passedFinalTime = location.state?.finalTime;
+      
+      let totalSeconds = null;
+  
+      if (typeof passedFinalTime === 'number') {
+          totalSeconds = passedFinalTime;
+      } else {
+          const start = localStorage.getItem("gameStartTime");
+          if (start) {
+              totalSeconds = Math.floor((Date.now() - Number(start)) / 1000);
+          }
+      }
+  
+      if (totalSeconds !== null) {
+          setFinalTime(totalSeconds);
+  
+          const token = localStorage.getItem("token");
+          if (token) 
+            
+          {fetch("http://localhost:5002/api/game/end", {
+            method: "POST",
+            headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({ time: totalSeconds }),})
+          .then((res) => res.json())
+            .then((data) => {
+            const savedBestTime = data.bestTime;
+            
+            if (savedBestTime !== null) {
+              setBestTime(savedBestTime);
+              } else {
 
+              setBestTime(totalSeconds);
+            }
+          })
+          .catch((error) =>
+            console.error("Error saving best time:", error)
+        );
+          }
+
+      }
+ }, [location.state]); 
+  
   const handleRestart = () => {
     localStorage.removeItem("gameStartTime");
     localStorage.removeItem("cardsStatus");
     localStorage.removeItem("usedHints");
     localStorage.removeItem("itemStatus");
 
-    const token = localStorage.getItem("token");
-    if (token) {
-      fetch("http://localhost:5002/api/game/state", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          gameState: {
-            itemStatus: [],
-            usedHints: [],
-            cardsStatus: ["viewed", "notViewed", "locked", "locked", "locked"],
-            timeElapsed: 0,
-          },
-        }),
-      }).catch((error) =>
-        console.error("Error resetting backend game state:", error)
-      );
-    }
+    localStorage.removeItem("gameState");
 
+    onAppReset();
     navigate("/game");
   };
 
   const minutes = finalTime ? Math.floor(finalTime / 60) : 0;
   const seconds = finalTime ? finalTime % 60 : 0;
+
+  const bestMinutes = bestTime ? Math.floor(bestTime / 60) : 0;
+  const bestSeconds = bestTime ? bestTime % 60 : 0;
 
   return (
     <div className="loginCard">
@@ -52,6 +81,11 @@ function End() {
       {finalTime !== null && (
         <h2 className="scoreText">
           Twój czas: {minutes} min {seconds} sek
+        </h2>
+      )}
+      {bestTime !== null && (
+        <h2 className="scoreText">
+          Najlepszy czas: {bestMinutes} min {bestSeconds} sek
         </h2>
       )}
       <button onClick={handleRestart} className="loginButton">

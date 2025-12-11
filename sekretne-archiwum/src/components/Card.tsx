@@ -2,7 +2,6 @@ import "../App.css";
 import { useState, useEffect } from "react";
 import Popup from "./Popup";
 import ReactMarkdown from "react-markdown";
-import { Link } from "react-router-dom";
 
 interface Props {
   image?: string | undefined;
@@ -20,6 +19,7 @@ interface Props {
   usedHints: { card: string; hint: string }[];
   isFinalCard?: boolean;
   onUseHint: (hint: string) => void;
+  onFinalCard?: () => void;
 }
 
 function Card({
@@ -38,6 +38,7 @@ function Card({
   hints,
   usedHints,
   onUseHint,
+  onFinalCard,
 }: Props) {
   const [buttonPopup, setButtonPopup] = useState(false);
   const [hintPopup, setHintPopup] = useState(false);
@@ -104,7 +105,7 @@ function Card({
       setReactionText(victoryText);
       onUnlockNext?.();
     } else if (normalizedInput == "qazwsx") {
-      setReactionText("Nie ma szans, że brat to napisał 💀");
+      setReactionText("Nie ma szans, że to napisałeś/aś 💀");
       // Odblokowanie sekretnego osiągnięcia ["komputer szkolny"] ?????
     } else {
       setReactionText("Źle! Nie zadziałało :(");
@@ -200,48 +201,50 @@ function Card({
                 </div>
               )}
             </>
-          ) : isFinalCard ? (
-            <Link
-              to="/end"
-              type="button"
-              className="popupButton"
-              onClick={() => {
-                setReactionText("Gratulacje! Udało Ci się opuścić pokój!");
-                onUnlockNext?.();
-              }}
+            ) : isFinalCard ? (
+            <button 
+            type="button"
+            className="popupButton"
+            onClick={() => {
+            onFinalCard?.(); 
+            setButtonPopup(false);
+            }}
             >
-              Opuść pokój
-            </Link>
-          ) : null}
+            Opuść pokój
+            </button>
+            ) : null}
         </Popup>
       )}
       <Popup trigger={hintPopup} setTrigger={setHintPopup}>
-        <p>{hints[hintIndex]}</p>
-        <p className="hintCounter">
-          {hintIndex + 1} / {hints.length}
-        </p>
-        <button
-          onClick={() => {
-            setHintIndex((prev) => {
-              const next = prev + 1;
-              if (next < hints.length) {
-                const nextHint = hints[next];
-                const alreadyUsed = usedHints.some(
-                  (h) => h.card === heading && h.hint === nextHint
-                );
+        <div className="hintPopupContent">
+          <p>{hints[hintIndex]}</p>
+          <p className="hintCounter">
+            {hintIndex + 1} / {hints.length}
+          </p>
+          <button
+            className="hintButton"
+            onClick={() => {
+              setHintIndex((prev) => {
+                const next = prev + 1;
+                if (next < hints.length) {
+                  const nextHint = hints[next];
+                  const alreadyUsed = usedHints.some(
+                    (h) => h.card === heading && h.hint === nextHint
+                  );
 
-                if (!alreadyUsed) {
-                  onUseHint(nextHint);
+                  if (!alreadyUsed) {
+                    onUseHint(nextHint);
+                  }
+                  return next;
+                } else {
+                  return prev;
                 }
-                return next;
-              } else {
-                return prev;
-              }
-            });
-          }}
-        >
-          Następna podpowiedź
-        </button>
+              });
+            }}
+          >
+            Następna podpowiedź
+          </button>
+        </div>
       </Popup>
     </>
   );

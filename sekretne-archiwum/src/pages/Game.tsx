@@ -2,6 +2,7 @@ import "../App.css";
 import Progress from "../components/Progress";
 import Card from "../components/Card";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Game({
   itemStatus,
@@ -103,6 +104,11 @@ function Game({
     ],
     "Drzwi wyjściowe": ["No bez przesady, z tym sobie poradzisz"],
   };
+  const navigate = useNavigate();
+  const [gameEnded, setGameEnded] = useState(false);
+  useEffect(() => {
+    localStorage.removeItem("gameState");
+  }, []);  
 
   const [timeElapsed, setTimeElapsed] = useState<number>(() => {
     const savedStart = localStorage.getItem("gameStartTime");
@@ -124,10 +130,11 @@ function Game({
   }, []);
 
   useEffect(() => {
-    if (token) {
+    if (token && !gameEnded) {
       saveGame();
     }
   }, [itemStatus, usedHints, cardsStatus, timeElapsed]);
+  
 
   const handleStatusChange = (index: number, newStatus: string) => {
     const updatedStatus = [...cardsStatus];
@@ -143,6 +150,14 @@ function Game({
       setItemStatus([true, false, false]);
     }
   };
+
+  const handleFinalCard = async () => {
+    const finalTimeInSeconds = timeElapsed;
+    setGameEnded(true);
+    localStorage.removeItem("gameStartTime");
+
+    navigate("/end", { state: { finalTime: finalTimeInSeconds } });
+  };
 
   const progressData = cardsData.map((card, index) => ({
     heading: card.heading,
@@ -175,6 +190,7 @@ function Game({
             cardsStatus,
             timeElapsed,
           },
+          currentTime: timeElapsed
         }),
       });
 
@@ -219,6 +235,7 @@ function Game({
               handleStatusChange(index, newStatus)
             }
             onUnlockNext={() => handleUnlockNext(index)}
+            onFinalCard={handleFinalCard}
           />
         ))}
         <Progress cards={progressData} />

@@ -34,19 +34,22 @@ export const saveGameState = async (req, res) => {
 
 export const endGame = async (req, res) => {
   try {
-    const user = await User.findByPk(req.user.id);
-    if (!user) return res.status(404).json({ message: "Nie znaleziono użytkownika" });
-
+  const user = await User.findByPk(req.user.id);
+  if (!user) return res.status(404).json({ message: "Nie znaleziono użytkownika" });
     const { time } = req.body;
     if (typeof time !== 'number' || time <= 0) return res.status(400).json({ message: "Nieprawidłowy czas" });
-
-    if (!user.bestTime || time < user.bestTime) {
-      user.bestTime = time;
-      await user.save();
-      res.json({ message: "Nowy najlepszy czas zapisany", bestTime: user.bestTime });
-    } else {
-      res.json({ message: "Czas nie jest lepszy od najlepszego", bestTime: user.bestTime });
+          
+          const currentBestTime = user.bestTime ? Number(user.bestTime) : null; 
+    
+    let message = "Czas nie jest lepszy od najlepszego";
+    
+    if (currentBestTime === null || time < currentBestTime) { 
+    user.bestTime = time; 
+    message = "Nowy najlepszy czas zapisany";
     }
+     await user.save();
+
+     res.json({ message, bestTime: user.bestTime });
   } catch (error) {
     console.error(error);
     res.status(500).json({ message: "Błąd zakończenia gry" });

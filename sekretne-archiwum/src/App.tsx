@@ -21,6 +21,17 @@ function App() {
     return saved ? JSON.parse(saved) : [false, false, false];
   });
 
+  const resetAppState = () => {
+    setItemStatus([false, false, false]);
+    setUsedHints([]);
+    setCardsStatus(initialCardsStatus);
+    localStorage.removeItem("gameStartTime");
+    localStorage.removeItem("cardsStatus");
+    localStorage.removeItem("usedHints");
+    localStorage.removeItem("itemStatus");
+    localStorage.removeItem("gameState");
+  };
+
   const [usedHints, setUsedHints] = useState<{ card: string; hint: string }[]>(
     () => {
       const saved = localStorage.getItem("usedHints");
@@ -98,6 +109,7 @@ function App() {
 
     loadGame();
   }, [token]);
+
   return (
     <>
       <Header itemStatus={itemStatus} usedHints={usedHints} />
@@ -119,7 +131,7 @@ function App() {
               />
             }
           />
-          <Route path="/end" element={<End />} />
+          <Route path="/end" element={<End onAppReset={resetAppState} />} />
         </Routes>
       </main>
       <Footer />
